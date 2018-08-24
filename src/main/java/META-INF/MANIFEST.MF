@@ -1,0 +1,2 @@
+Main-Class: se.steam.trellov2.Trellov2Application
+
