@@ -13,7 +13,7 @@ import java.util.UUID;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, UUID> {
 
-    List<UserEntity> findByTeamEntity(TeamEntity teamEntity);
+    List<UserEntity> findByTeamEntities(TeamEntity teamEntity);
 
     Page<UserEntity> findByFirstNameContainingAndLastNameContainingAndUsernameContainingAndActive(String firstName, String lastName, String username, boolean active, Pageable pageable);
 
