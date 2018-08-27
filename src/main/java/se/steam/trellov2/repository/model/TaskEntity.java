@@ -19,9 +19,13 @@ public final class TaskEntity extends AbstractEntity<TaskEntity> {
     private final TaskStatus status;
     @Column(nullable = false)
     private final LocalDate date;
+
+    //Many tasks to one user
     @ManyToOne
     @JoinColumn(name = "User")
     private final UserEntity userEntity;
+
+
     @ManyToOne
     @JoinColumn(name = "Team", nullable = false, updatable = false)
     private final TeamEntity teamEntity;
