@@ -103,11 +103,6 @@ public final class Logic {
                 .orElseThrow(() -> new DataNotFoundException("Task with id [" + taskId + "] not found"));
     }
 
-    public TaskEntity failValidateTask(UUID taskId) {
-        return taskRepository.findById(taskId)
-                .orElseThrow(() -> new DataNotFoundException("Task with id [" + taskId + "] not found"));
-    }
-
     public IssueEntity validateIssue(UUID issueId) {
         return issueRepository.findById(issueId)
                 .map(this::checkIfActive)
