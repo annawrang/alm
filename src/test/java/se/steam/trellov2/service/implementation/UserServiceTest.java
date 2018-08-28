@@ -14,6 +14,8 @@ import se.steam.trellov2.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -50,6 +52,19 @@ public class UserServiceTest extends Trellov2ApplicationTests {
                 postedUser.getFirstName().equals(checkUser.getFirstName()) &&
                 postedUser.getLastName().equals(checkUser.getLastName()));
 
+    }
+
+    @Test
+    public void updateUserName() {
+        User postedUser = userService.save(new User("KalleAnka1", "Kalle", "Anka"));
+        tempUsers.add(postedUser);
+        User updatedUser = new User(postedUser.getId(), "AnkaKalle2", "Kalle", "Anka");
+        userService.update(updatedUser);
+
+        assertEquals(postedUser.getId(), updatedUser.getId());
+        assertNotEquals(postedUser.getUsername(), updatedUser.getUsername());
+        assertEquals(postedUser.getFirstName(), updatedUser.getFirstName());
+        assertEquals(postedUser.getLastName(), updatedUser.getLastName());
     }
 
     @After
