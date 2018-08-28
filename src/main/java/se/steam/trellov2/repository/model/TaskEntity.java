@@ -20,11 +20,14 @@ public final class TaskEntity extends AbstractEntity<TaskEntity> {
     @Column(nullable = false)
     private final LocalDate date;
 
-    //Many tasks to one user
     @ManyToOne
     @JoinColumn(name = "User")
     private final UserEntity userEntity;
 
+//    Many Tasks to one UserHelper
+    @ManyToOne
+    @JoinColumn(name = "Helper")
+    private final UserEntity taskHelper;
 
     @ManyToOne
     @JoinColumn(name = "Team", nullable = false, updatable = false)
@@ -36,6 +39,7 @@ public final class TaskEntity extends AbstractEntity<TaskEntity> {
         this.date = null;
         this.userEntity = null;
         this.teamEntity = null;
+        this.taskHelper = null;
     }
 
     public TaskEntity(UUID id, String text, TaskStatus status, LocalDate date) {
@@ -45,6 +49,7 @@ public final class TaskEntity extends AbstractEntity<TaskEntity> {
         this.date = date;
         this.userEntity = null;
         this.teamEntity = null;
+        this.taskHelper = null;
     }
 
     private TaskEntity(UUID id, boolean active, String text, TaskStatus status, LocalDate date) {
@@ -54,15 +59,17 @@ public final class TaskEntity extends AbstractEntity<TaskEntity> {
         this.status = status;
         this.userEntity = null;
         this.teamEntity = null;
+        this.taskHelper = null;
     }
 
-    private TaskEntity(UUID id, String text, TaskStatus status, LocalDate date, UserEntity userEntity, TeamEntity teamEntity) {
+    public TaskEntity(UUID id, String text, TaskStatus status, LocalDate date, UserEntity userEntity, TeamEntity teamEntity, UserEntity taskHelper) {
         super(id, true);
         this.text = text;
         this.status = status;
         this.date = date;
         this.userEntity = userEntity;
         this.teamEntity = teamEntity;
+        this.taskHelper = taskHelper;
     }
 
     public String getText() {
@@ -86,15 +93,15 @@ public final class TaskEntity extends AbstractEntity<TaskEntity> {
     }
 
     public TaskEntity setUserEntity(UserEntity userEntity) {
-        return new TaskEntity(getId(), text, STARTED, date, userEntity, teamEntity);
+        return new TaskEntity(getId(), text, STARTED, date, userEntity, teamEntity, taskHelper);
     }
 
     public TaskEntity setTeamEntity(TeamEntity teamEntity) {
-        return new TaskEntity(getId(), text, status, date, userEntity, teamEntity);
+        return new TaskEntity(getId(), text, status, date, userEntity, teamEntity, taskHelper);
     }
 
     public TaskEntity dropTask() {
-        return new TaskEntity(getId(), text, UNSTARTED, LocalDate.now(), null, teamEntity);
+        return new TaskEntity(getId(), text, UNSTARTED, LocalDate.now(), null, teamEntity, taskHelper);
     }
 
     @Override

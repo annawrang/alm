@@ -52,7 +52,17 @@ final class TaskServiceImp implements TaskService {
     @Override
     public void update(Task task) {
         logic.validateTask(task.getId());
-        taskRepository.save(toTaskEntity(task));
+
+//        UUID userId =
+
+//        if TaskEntity has User and Helper
+//        get the UUID for User and Helper
+//        taskRepository.save(toTaskEntity(task, user, helper))
+
+
+
+
+        //taskRepository.save(toTaskEntity(task));
     }
 
     @Override

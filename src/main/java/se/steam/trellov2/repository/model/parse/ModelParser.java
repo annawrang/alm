@@ -8,6 +8,9 @@ import se.steam.trellov2.repository.model.IssueEntity;
 import se.steam.trellov2.repository.model.TaskEntity;
 import se.steam.trellov2.repository.model.TeamEntity;
 import se.steam.trellov2.repository.model.UserEntity;
+import se.steam.trellov2.service.TaskService;
+
+import java.util.UUID;
 
 public final class ModelParser {
 
@@ -28,8 +31,12 @@ public final class ModelParser {
         return new Task(t.getId(), t.getText(), t.getStatus(), t.getDate());
     }
 
+    public static TaskEntity toTaskEntity(Task t, User user, User helper) {
+            return new TaskEntity(t.getId(), t.getText(), t.getStatus(), t.getDate(), toUserEntity(user), null, toUserEntity(helper));
+    }
+
     public static TaskEntity toTaskEntity(Task t) {
-        return new TaskEntity(t.getId(), t.getText(), t.getStatus(), t.getDate());
+            return new TaskEntity(t.getId(), t.getText(), t.getStatus(), t.getDate());
     }
 
     public static Team fromTeamEntity(TeamEntity t) {

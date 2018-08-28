@@ -1,6 +1,7 @@
 package se.steam.trellov2.resource;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PutMapping;
 import se.steam.trellov2.model.Issue;
 import se.steam.trellov2.model.Task;
 import se.steam.trellov2.resource.mapper.Secured;
@@ -38,6 +39,15 @@ public final class TaskResource {
     @Path("{id}")
     public void updateTask(@PathParam("id") UUID id, Task task) {
         taskService.update(new Task(id, task.getText(), task.getStatus(), task.getDate()));
+    }
+
+//    Add a User as a helper
+//    Kontrollera villkor.
+    @PUT
+    @Secured
+    @Path("{taskId}/users/{helperId}")
+    public void addHelperToTask(@PathParam("taskId") UUID taskId, @PathParam("helperId") UUID helperId)   {
+        //ta metod som lägger in User i Task fast gör om den så att den lägger till en Helper i Task.
     }
 
     @GET

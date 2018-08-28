@@ -29,7 +29,7 @@ final class UserServiceImp implements UserService {
     private final TaskRepository taskRepository;
     private final Logic logic;
 
-    private UserServiceImp(UserRepository userRepository, TaskRepository taskRepository, Logic logic) {
+    protected UserServiceImp(UserRepository userRepository, TaskRepository taskRepository, Logic logic) {
         this.userRepository = userRepository;
         this.taskRepository = taskRepository;
         this.logic = logic;
@@ -87,6 +87,7 @@ final class UserServiceImp implements UserService {
                 )
         );
     }
+
 
     @Override
     public void leaveTeam(UUID teamId, UUID userId) {
