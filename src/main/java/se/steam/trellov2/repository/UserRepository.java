@@ -17,4 +17,5 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
 
     Page<UserEntity> findByFirstNameContainingAndLastNameContainingAndUsernameContainingAndActive(String firstName, String lastName, String username, boolean active, Pageable pageable);
 
+    UserEntity getUserEntityById(UUID id);
 }

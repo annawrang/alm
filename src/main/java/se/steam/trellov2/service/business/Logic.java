@@ -62,9 +62,6 @@ public final class Logic {
         throw new WrongInputException("Task is already taken by " + taskEntity.getUserEntity().getUsername());
     }
 
-    /*
-    En helper ska inte behöva vara i samma team som Tasks User.
-     */
     public TaskEntity checkIfSameTeam(UserEntity userEntity, TaskEntity taskEntity) {
         if (userEntity.getTeamEntity() != null &&
                 userEntity.getTeamEntity().getId().toString().equals(taskEntity.getTeamEntity().getId().toString())) {

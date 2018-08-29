@@ -68,7 +68,7 @@ public final class TaskEntity extends AbstractEntity<TaskEntity> {
         this.date = date;
         this.userEntity = userEntity;
         this.teamEntity = teamEntity;
-        this.taskHelper = null;
+        this.taskHelper = taskHelper;
     }
 
     public String getText() {
@@ -96,6 +96,10 @@ public final class TaskEntity extends AbstractEntity<TaskEntity> {
 
     public TaskEntity setUserEntity(UserEntity userEntity) {
         return new TaskEntity(getId(), text, STARTED, date, userEntity, teamEntity, taskHelper);
+    }
+
+    public TaskEntity setHelperUserEntity(UserEntity helperUserEntity) {
+        return new TaskEntity(getId(), text, STARTED, date, userEntity, teamEntity, helperUserEntity);
     }
 
     public TaskEntity setTeamEntity(TeamEntity teamEntity) {

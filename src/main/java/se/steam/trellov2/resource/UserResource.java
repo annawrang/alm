@@ -76,8 +76,8 @@ public final class UserResource {
     @PUT
     @Secured
     @Path("{id}/tasks/{taskId}")
-    public void addTaskToUser(@PathParam("id") UUID userId, @PathParam("taskId") UUID taskId) {
-        userService.addTaskToUser(userId, taskId);
+    public void updateTaskWithHelperUser(@PathParam("id") UUID userId, @PathParam("taskId") UUID taskId) {
+        userService.addHelperUserToTask(userId, taskId);
     }
 
 

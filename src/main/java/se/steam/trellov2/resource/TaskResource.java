@@ -41,13 +41,13 @@ public final class TaskResource {
         taskService.update(new Task(id, task.getText(), task.getStatus(), task.getDate()));
     }
 
-//    Add a User as a helper
-//    Kontrollera villkor.
+
     @PUT
     @Secured
     @Path("{taskId}/users/{helperId}")
     public void addHelperToTask(@PathParam("taskId") UUID taskId, @PathParam("helperId") UUID helperId)   {
-        //ta metod som lägger in User i Task fast gör om den så att den lägger till en Helper i Task.
+
+
     }
 
     @GET
