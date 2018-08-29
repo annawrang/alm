@@ -88,13 +88,14 @@ final class UserServiceImp implements UserService {
         );
     }
 
+    @Override
     public void addHelperUserToTask(UUID helperId, UUID taskId) {
-        TaskEntity taskEntity = taskRepository.getTaskEntitiesById(taskId);
-        taskEntity = taskEntity.setHelperUserEntity(userRepository.getUserEntityById(helperId));
-
-        taskRepository.save(taskEntity);
+        if (logic.checkIfUserInTeamExists(taskRepository.getTaskEntitiesById(taskId)) == true) {
+            TaskEntity taskEntity = taskRepository.getTaskEntitiesById(taskId);
+            taskEntity = taskEntity.setHelperUserEntity(userRepository.getUserEntityById(helperId));
+            taskRepository.save(taskEntity);
+        }
     }
-
 
     @Override
     public void leaveTeam(UUID teamId, UUID userId) {

@@ -70,6 +70,13 @@ public final class Logic {
         throw new WrongInputException("Task and User do not belong to the same Team");
     }
 
+    public boolean checkIfUserInTeamExists(TaskEntity taskEntity) {
+        if (taskEntity.getUserEntity() != null) {
+            return true;
+        }
+        throw new WrongInputException("No user has this task");
+    }
+
     private <T extends AbstractEntity> T checkIfActive(T entity) {
         if (entity.isActive()) {
             return entity;
