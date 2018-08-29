@@ -8,7 +8,7 @@ public final class Issue extends AbstractModel<Issue> {
 
     private final String description;
 
-//    @JsonCreator
+    @JsonCreator
     public Issue(String description) {
         super(null);
         this.description = description;
