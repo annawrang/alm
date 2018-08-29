@@ -83,6 +83,9 @@ public final class TaskEntity extends AbstractEntity<TaskEntity> {
     public UserEntity getUserEntity() {
         return userEntity;
     }
+    public UserEntity getTaskHelper() {
+        return taskHelper;
+    }
 
     public LocalDate getDate() {
         return date;
