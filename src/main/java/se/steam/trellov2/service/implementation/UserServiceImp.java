@@ -91,12 +91,7 @@ final class UserServiceImp implements UserService {
     @Override
     public void leaveTeam(UUID teamId, UUID userId) {
         UserEntity u = logic.validateUser(userId);
-        if (
-//                u.getTeamEntities() != null &&
-                u.getTeamEntities().stream().anyMatch(t -> t.getId().toString().equals(teamId.toString()))
-                ){
-
-//                u.getTeamEntities().getId().toString().equals(teamId.toString())) {
+        if (u.getTeamEntities().stream().anyMatch(t -> t.getId().toString().equals(teamId.toString()))){
             userRepository.save(u.leaveTeam());
         } else {
             throw new WrongInputException("User does not belong to requested Team");
