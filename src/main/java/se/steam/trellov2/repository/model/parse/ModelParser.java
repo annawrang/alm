@@ -35,6 +35,10 @@ public final class ModelParser {
             return new TaskEntity(t.getId(), t.getText(), t.getStatus(), t.getDate(), toUserEntity(user), null, toUserEntity(helper));
     }
 
+    public static TaskEntity toTaskEntity(Task t, User user) {
+        return new TaskEntity(t.getId(), t.getText(), t.getStatus(), t.getDate(), toUserEntity(user), null, null);
+    }
+
     public static TaskEntity toTaskEntity(Task t) {
             return new TaskEntity(t.getId(), t.getText(), t.getStatus(), t.getDate());
     }

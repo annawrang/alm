@@ -24,7 +24,6 @@ public final class TaskEntity extends AbstractEntity<TaskEntity> {
     @JoinColumn(name = "User")
     private final UserEntity userEntity;
 
-//    Many Tasks to one UserHelper
     @ManyToOne
     @JoinColumn(name = "Helper")
     private final UserEntity taskHelper;
@@ -69,7 +68,7 @@ public final class TaskEntity extends AbstractEntity<TaskEntity> {
         this.date = date;
         this.userEntity = userEntity;
         this.teamEntity = teamEntity;
-        this.taskHelper = taskHelper;
+        this.taskHelper = null;
     }
 
     public String getText() {

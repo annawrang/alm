@@ -57,14 +57,19 @@ final class TaskServiceImp implements TaskService {
         logic.validateTask(task.getId());
 
         TaskEntity taskEntity = taskRepository.getTaskEntitiesById(task.getId());
+        //UUID userId = taskEntity.getUserEntity().getId();
 
-        UUID userId = taskEntity.getUserEntity().getId();
-        if (userId != null) {
-            UUID helperId = taskEntity.getTaskHelper().getId();
-
-            taskRepository.save(toTaskEntity(task, userService.get(userId), userService.get(helperId)));
+        if (taskEntity.getUserEntity().getId() != null) {
+            try {
+                if(taskEntity.getTaskHelper().getId() != null) {
+                    taskRepository.save(toTaskEntity(task, userService.get(taskEntity.getUserEntity().getId()),
+                            userService.get(taskEntity.getTaskHelper().getId())));
+                }
+            } catch (Exception e) {
+                taskRepository.save(toTaskEntity(task, userService.get(taskEntity.getUserEntity().getId())));
+            }
         }
-        if (userId == null) {
+        else {
             taskRepository.save(toTaskEntity(task));
         }
     }

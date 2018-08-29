@@ -8,7 +8,7 @@ public final class Team extends AbstractModel<Team> {
 
     private final String name;
 
-    @JsonCreator
+//    @JsonCreator
     public Team(String name) {
         super(null);
         this.name = name;
