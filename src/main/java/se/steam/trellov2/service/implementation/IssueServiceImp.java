@@ -39,7 +39,7 @@ final class IssueServiceImp implements IssueService {
     public Issue save(UUID taskId, Issue issue) {
         return ModelParser.fromIssueEntity(issueRepository.save(
                 ModelParser.toIssueEntity(issue.assignId()).setTaskEnitity(
-                        taskRepository.save(logic.failValidateTask(taskId).dropTask()))));
+                        taskRepository.save(logic.validateTask(taskId).dropTask()))));
     }
 
     @Override
