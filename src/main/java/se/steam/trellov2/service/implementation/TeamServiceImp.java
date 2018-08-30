@@ -39,6 +39,7 @@ final class TeamServiceImp implements TeamService {
 
     @Override
     public Team save(Team team) {
+        System.out.println("hello");
         return fromTeamEntity(teamRepository.save(toTeamEntity(team.assignId())));
     }
 
