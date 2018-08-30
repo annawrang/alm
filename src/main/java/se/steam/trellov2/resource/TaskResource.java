@@ -6,6 +6,7 @@ import se.steam.trellov2.model.Task;
 import se.steam.trellov2.resource.mapper.Secured;
 import se.steam.trellov2.service.IssueService;
 import se.steam.trellov2.service.TaskService;
+import se.steam.trellov2.service.UserService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -24,13 +25,15 @@ public final class TaskResource {
 
     private final TaskService taskService;
     private final IssueService issueService;
+    private final UserService userService;
 
     @Context
     private UriInfo uriInfo;
 
-    public TaskResource(TaskService taskService, IssueService issueService) {
+    public TaskResource(TaskService taskService, IssueService issueService, UserService userService) {
         this.taskService = taskService;
         this.issueService = issueService;
+        this.userService = userService;
     }
 
     @PUT
@@ -38,6 +41,14 @@ public final class TaskResource {
     @Path("{id}")
     public void updateTask(@PathParam("id") UUID id, Task task) {
         taskService.update(new Task(id, task.getText(), task.getStatus(), task.getDate()));
+    }
+
+
+    @PUT
+    @Secured
+    @Path("{taskId}/users/{helperId}")
+    public void addHelperToTask(@PathParam("taskId") UUID taskId, @PathParam("helperId") UUID helperId)   {
+        userService.addHelperUserToTask(helperId, taskId);
     }
 
     @GET

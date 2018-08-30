@@ -18,5 +18,7 @@ public interface UserService extends Service<User> {
 
     void addTaskToUser(UUID userId, UUID taskId);
 
+    void addHelperUserToTask(UUID helperId, UUID taskId);
+
     void leaveTeam(UUID teamId, UUID userId);
 }

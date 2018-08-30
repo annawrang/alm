@@ -15,6 +15,7 @@ import se.steam.trellov2.repository.model.parse.ModelParser;
 import se.steam.trellov2.resource.parameter.PagingInput;
 import se.steam.trellov2.resource.parameter.TaskInput;
 import se.steam.trellov2.service.TaskService;
+import se.steam.trellov2.service.UserService;
 import se.steam.trellov2.service.business.Logic;
 import se.steam.trellov2.service.exception.WrongInputException;
 
@@ -30,11 +31,13 @@ final class TaskServiceImp implements TaskService {
     private final TaskRepository taskRepository;
     private final IssueRepository issueRepository;
     private final Logic logic;
+    private final UserService userService;
 
-    private TaskServiceImp(TaskRepository taskRepository, IssueRepository issueRepository, Logic logic) {
+    private TaskServiceImp(TaskRepository taskRepository, IssueRepository issueRepository, Logic logic, UserService userService) {
         this.taskRepository = taskRepository;
         this.issueRepository = issueRepository;
         this.logic = logic;
+        this.userService = userService;
     }
 
     @Override
@@ -52,7 +55,21 @@ final class TaskServiceImp implements TaskService {
     @Override
     public void update(Task task) {
         logic.validateTask(task.getId());
-        taskRepository.save(toTaskEntity(task));
+        TaskEntity taskEntity = taskRepository.getTaskEntitiesById(task.getId());
+
+        if (taskEntity.getUserEntity().getId() != null) {
+            try {
+                if(taskEntity.getTaskHelper().getId() != null) {
+                    taskRepository.save(toTaskEntity(task, userService.get(taskEntity.getUserEntity().getId()),
+                            userService.get(taskEntity.getTaskHelper().getId())));
+                }
+            } catch (Exception e) {
+                taskRepository.save(toTaskEntity(task, userService.get(taskEntity.getUserEntity().getId())));
+            }
+        }
+        else {
+            taskRepository.save(toTaskEntity(task));
+        }
     }
 
     @Override

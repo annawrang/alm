@@ -35,4 +35,6 @@ public interface TaskRepository extends JpaRepository<TaskEntity, UUID> {
 
     List<TaskEntity> findByTeamEntityAndActive(TeamEntity teamEntity, boolean active);
 
+    TaskEntity getTaskEntitiesById(UUID taskId);
+
 }
