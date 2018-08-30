@@ -6,7 +6,7 @@
     <groupId>se.steam</groupId>
     <artifactId>trellov2</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
 
     <name>trellov2</name>
