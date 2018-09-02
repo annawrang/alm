@@ -90,13 +90,15 @@ public class TeamServiceTest {
         assertNotNull(uTesting);
         assertNotNull(uTesting2);
         assertNotNull(uTesting3);
-
     }
 
+
+    /*
+     * Adding a user who has three teams to a new team. Should throw exception.
+     * */
     @Test(expected = UserBelongingToTeamException.class)
     public void addUserTo4Teams() {
         teams.add(teamService.save(new Team("TestTeam4444")));
-
         teamService.addUserToTeam(teams.get(3).getId(), users.get(0).getId());
     }
 
