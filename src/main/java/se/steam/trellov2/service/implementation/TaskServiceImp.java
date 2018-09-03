@@ -1,11 +1,13 @@
 package se.steam.trellov2.service.implementation;
 
+import jdk.net.SocketFlow;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import se.steam.trellov2.model.Task;
 import se.steam.trellov2.model.Team;
+import se.steam.trellov2.model.status.TaskStatus;
 import se.steam.trellov2.repository.IssueRepository;
 import se.steam.trellov2.repository.TaskRepository;
 import se.steam.trellov2.repository.model.AbstractEntity;
@@ -56,6 +58,9 @@ final class TaskServiceImp implements TaskService {
     public void update(Task task) {
         logic.validateTask(task.getId());
         TaskEntity taskEntity = taskRepository.getTaskEntitiesById(task.getId());
+        System.out.println(task.getStatus().toString());
+        System.out.println(taskEntity.getStatus().toString());
+        task = logic.validateTaskStatus(task, taskEntity);
 
         if (taskEntity.getUserEntity().getId() != null) {
             try {
