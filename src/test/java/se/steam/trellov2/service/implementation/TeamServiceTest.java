@@ -37,7 +37,6 @@ public class TeamServiceTest {
         teams.add(teamService.save(new Team("TestTeam3333")));
 
         users.add(userService.save(new User("TestUser123", "TestUser123", "TestUser123")));
-        teams.forEach(team -> teamService.addUserToTeam(team.getId(), users.get(0).getId()));
 
     }
 
@@ -83,6 +82,7 @@ public class TeamServiceTest {
      * */
     @Test
     public void addUserTo3Teams() {
+        teams.forEach(team -> teamService.addUserToTeam(team.getId(), users.get(0).getId()));
         User uTesting = userService.getByTeam(teams.get(0).getId()).stream().filter(user -> user.equals(users.get(0))).findAny().orElse(null);
         User uTesting2 = userService.getByTeam(teams.get(1).getId()).stream().filter(user -> user.equals(users.get(0))).findAny().orElse(null);
         User uTesting3 = userService.getByTeam(teams.get(2).getId()).stream().filter(user -> user.equals(users.get(0))).findAny().orElse(null);
@@ -98,6 +98,7 @@ public class TeamServiceTest {
      * */
     @Test(expected = UserBelongingToTeamException.class)
     public void addUserTo4Teams() {
+        teams.forEach(team -> teamService.addUserToTeam(team.getId(), users.get(0).getId()));
         teams.add(teamService.save(new Team("TestTeam4444")));
         teamService.addUserToTeam(teams.get(3).getId(), users.get(0).getId());
     }
