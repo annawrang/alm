@@ -10,7 +10,7 @@ public final class TeamEntity extends AbstractEntity<TeamEntity> {
     @Column(nullable = false)
     private final String name;
 
-    TeamEntity() {
+    public TeamEntity() {
         this.name = null;
     }
 

@@ -29,7 +29,7 @@ final class UserServiceImp implements UserService {
     private final TaskRepository taskRepository;
     private final Logic logic;
 
-    private UserServiceImp(UserRepository userRepository, TaskRepository taskRepository, Logic logic) {
+    protected UserServiceImp(UserRepository userRepository, TaskRepository taskRepository, Logic logic) {
         this.userRepository = userRepository;
         this.taskRepository = taskRepository;
         this.logic = logic;
@@ -61,7 +61,7 @@ final class UserServiceImp implements UserService {
 
     @Override
     public List<User> getByTeam(UUID teamId) {
-        return userRepository.findByTeamEntity(logic.validateTeam(teamId))
+        return userRepository.findByTeamEntities(logic.validateTeam(teamId))
                 .stream()
                 .map(ModelParser::fromUserEntity)
                 .collect(Collectors.toList());
@@ -89,10 +89,18 @@ final class UserServiceImp implements UserService {
     }
 
     @Override
+    public void addHelperUserToTask(UUID helperId, UUID taskId) {
+        if (logic.checkIfUserInTeamExists(taskRepository.getTaskEntitiesById(taskId)) == true) {
+            TaskEntity taskEntity = taskRepository.getTaskEntitiesById(taskId);
+            taskEntity = taskEntity.setHelperUserEntity(userRepository.getUserEntityById(helperId));
+            taskRepository.save(taskEntity);
+        }
+    }
+
+    @Override
     public void leaveTeam(UUID teamId, UUID userId) {
         UserEntity u = logic.validateUser(userId);
-        if (u.getTeamEntity() != null &&
-                u.getTeamEntity().getId().toString().equals(teamId.toString())) {
+        if (u.getTeamEntities().stream().anyMatch(t -> t.getId().toString().equals(teamId.toString()))){
             userRepository.save(u.leaveTeam());
         } else {
             throw new WrongInputException("User does not belong to requested Team");

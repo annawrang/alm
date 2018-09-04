@@ -1,7 +1,9 @@
 package se.steam.trellov2.service.business;
 
 import org.springframework.stereotype.Component;
+import se.steam.trellov2.model.Task;
 import se.steam.trellov2.model.User;
+import se.steam.trellov2.model.status.TaskStatus;
 import se.steam.trellov2.repository.IssueRepository;
 import se.steam.trellov2.repository.TaskRepository;
 import se.steam.trellov2.repository.TeamRepository;
@@ -30,16 +32,20 @@ public final class Logic {
 
 
     public TeamEntity checkTeamMaxCap(TeamEntity team) {
-        if (userRepository.findByTeamEntity(team).size() >= 10)
+        if (userRepository.findByTeamEntities(team).size() >= 10)
             throw new TeamCapacityReachedException("Max users in team reached!");
         return team;
     }
 
-    public UserEntity checkUserTeamAvailability(UserEntity user) {
-        if (user.getTeamEntity() != null)
-            throw new UserBelongingToTeamException("Cant add user to team! User already belongs to a team.");
+    public UserEntity checkUserTeamAvailability(UserEntity user, UUID teamId) {
+        if (user.getTeamEntities().size() == 3)
+            throw new UserBelongingToTeamException("Cant add user to team! User already belongs to three teams.");
+        if (user.getTeamEntities().stream().anyMatch(t -> t.getId().toString().equals(teamRepository.getOne(teamId).getId().toString()))) {
+            throw new UserBelongingToTeamException("User already belongs to team!");
+        }
         return user;
     }
+
 
     public User validateUsername(User user) {
         if (user.getUsername().length() < 10) {
@@ -63,11 +69,17 @@ public final class Logic {
     }
 
     public TaskEntity checkIfSameTeam(UserEntity userEntity, TaskEntity taskEntity) {
-        if (userEntity.getTeamEntity() != null &&
-                userEntity.getTeamEntity().getId().toString().equals(taskEntity.getTeamEntity().getId().toString())) {
+        if (userEntity.getTeamEntities().stream().anyMatch(t -> t.getId().toString().equals(taskEntity.getTeamEntity().getId().toString()))) {
             return taskEntity.setUserEntity(userEntity);
         }
         throw new WrongInputException("Task and User do not belong to the same Team");
+    }
+
+    public boolean checkIfUserInTeamExists(TaskEntity taskEntity) {
+        if (taskEntity.getUserEntity() != null) {
+            return true;
+        }
+        throw new WrongInputException("No user has this task");
     }
 
     private <T extends AbstractEntity> T checkIfActive(T entity) {
@@ -107,5 +119,40 @@ public final class Logic {
         return issueRepository.findById(issueId)
                 .map(this::checkIfActive)
                 .orElseThrow(() -> new DataNotFoundException("Issue with id [" + issueId + "] not found"));
+    }
+
+    public Task validateTaskStatus(Task task, TaskEntity taskEntity) {
+        switch (taskEntity.getStatus()) {
+            case UNSTARTED:
+                switch (task.getStatus()) {
+                    case PENDING:
+                        task = task.setStatus(taskEntity.getStatus());
+                        break;
+                    default:
+                        break;
+                }
+            case STARTED:
+                break;
+            case PENDING:
+                switch (task.getStatus()) {
+                    case STARTED:
+                        break;
+                    default:
+                        task = task.setStatus(taskEntity.getStatus());
+                        break;
+                }
+                break;
+            case DONE:
+                switch (task.getStatus()) {
+                    case PENDING:
+                        task = task.setStatus(taskEntity.getStatus());
+                        break;
+                    default:
+                        break;
+                }
+                default:
+                    break;
+        }
+        return task;
     }
 }
