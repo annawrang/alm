@@ -57,7 +57,7 @@ final class TeamServiceImp implements TeamService {
     public void remove(UUID teamId) {
         TeamEntity teamEntity = logic.validateTeam(teamId);
 
-        userRepository.saveAll(userRepository.findByTeamEntity(teamEntity).stream()
+        userRepository.saveAll(userRepository.findByTeamEntities(teamEntity).stream()
                 .map(UserEntity::leaveTeam)
                 .collect(Collectors.toList()));
 
@@ -78,9 +78,11 @@ final class TeamServiceImp implements TeamService {
 
     @Override
     public Pair<Team, User> addUserToTeam(UUID teamId, UUID userId) {
-        UserEntity s = userRepository.save(logic.checkUserTeamAvailability(logic.validateUser(userId))
-                .setTeamEntity(logic.checkTeamMaxCap(logic.validateTeam(teamId))));
-        return Pair.of(fromTeamEntity(s.getTeamEntity()), fromUserEntity(s));
+        UserEntity s = userRepository.save(logic.checkUserTeamAvailability(logic.validateUser(userId), teamId)
+                .setTeamEntities(logic.checkTeamMaxCap(logic.validateTeam(teamId))));
+        int index = s.getTeamEntities().indexOf(teamRepository.getOne(teamId));
+//        TeamEntity t = teamRepository.getOne(teamId);
+        return Pair.of(fromTeamEntity(s.getTeamEntities().get(index+1)), fromUserEntity(s));
     }
 
     @Override
