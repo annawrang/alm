@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static se.steam.trellov2.model.status.TaskStatus.UNSTARTED;
 
@@ -78,6 +80,19 @@ public class UserServiceTest extends Trellov2ApplicationTests {
     }
 
     @Test
+    public void updateUserName() {
+        User postedUser = userService.save(new User("KalleAnka1", "Kalle", "Anka"));
+        tempUsers.add(postedUser);
+        User updatedUser = new User(postedUser.getId(), "AnkaKalle2", "Kalle", "Anka");
+        userService.update(updatedUser);
+
+        assertEquals(postedUser.getId(), updatedUser.getId());
+        assertNotEquals(postedUser.getUsername(), updatedUser.getUsername());
+        assertEquals(postedUser.getFirstName(), updatedUser.getFirstName());
+        assertEquals(postedUser.getLastName(), updatedUser.getLastName());
+} 
+  
+    @Test
     public void addUserAsHelperToTask() {
         /*
          lägg mina två users i listan och jobba mot den istället.
@@ -85,9 +100,7 @@ public class UserServiceTest extends Trellov2ApplicationTests {
          Gör samma sak för varje entitet. Dvs en lista med team, en med pair<team,task>, etc.
          Sen instansierar jag dem i klassen, lägger till dem i @before samt i @after.
           */
-
-
-
+      
         // create team to use
         postedTeam = teamService.save(new Team("TestTeam"));
         // create task in team
