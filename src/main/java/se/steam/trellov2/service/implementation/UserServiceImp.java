@@ -29,7 +29,7 @@ final class UserServiceImp implements UserService {
     private final TaskRepository taskRepository;
     private final Logic logic;
 
-    private UserServiceImp(UserRepository userRepository, TaskRepository taskRepository, Logic logic) {
+    protected UserServiceImp(UserRepository userRepository, TaskRepository taskRepository, Logic logic) {
         this.userRepository = userRepository;
         this.taskRepository = taskRepository;
         this.logic = logic;
@@ -86,6 +86,15 @@ final class UserServiceImp implements UserService {
                         logic.checkIfTaskIsTaken(logic.validateTask(taskId))
                 )
         );
+    }
+
+    @Override
+    public void addHelperUserToTask(UUID helperId, UUID taskId) {
+        if (logic.checkIfUserInTeamExists(taskRepository.getTaskEntitiesById(taskId)) == true) {
+            TaskEntity taskEntity = taskRepository.getTaskEntitiesById(taskId);
+            taskEntity = taskEntity.setHelperUserEntity(userRepository.getUserEntityById(helperId));
+            taskRepository.save(taskEntity);
+        }
     }
 
     @Override

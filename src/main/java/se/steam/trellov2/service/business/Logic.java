@@ -1,7 +1,9 @@
 package se.steam.trellov2.service.business;
 
 import org.springframework.stereotype.Component;
+import se.steam.trellov2.model.Task;
 import se.steam.trellov2.model.User;
+import se.steam.trellov2.model.status.TaskStatus;
 import se.steam.trellov2.repository.IssueRepository;
 import se.steam.trellov2.repository.TaskRepository;
 import se.steam.trellov2.repository.TeamRepository;
@@ -70,6 +72,13 @@ public final class Logic {
         throw new WrongInputException("Task and User do not belong to the same Team");
     }
 
+    public boolean checkIfUserInTeamExists(TaskEntity taskEntity) {
+        if (taskEntity.getUserEntity() != null) {
+            return true;
+        }
+        throw new WrongInputException("No user has this task");
+    }
+
     private <T extends AbstractEntity> T checkIfActive(T entity) {
         if (entity.isActive()) {
             return entity;
@@ -107,5 +116,40 @@ public final class Logic {
         return issueRepository.findById(issueId)
                 .map(this::checkIfActive)
                 .orElseThrow(() -> new DataNotFoundException("Issue with id [" + issueId + "] not found"));
+    }
+
+    public Task validateTaskStatus(Task task, TaskEntity taskEntity) {
+        switch (taskEntity.getStatus()) {
+            case UNSTARTED:
+                switch (task.getStatus()) {
+                    case PENDING:
+                        task = task.setStatus(taskEntity.getStatus());
+                        break;
+                    default:
+                        break;
+                }
+            case STARTED:
+                break;
+            case PENDING:
+                switch (task.getStatus()) {
+                    case STARTED:
+                        break;
+                    default:
+                        task = task.setStatus(taskEntity.getStatus());
+                        break;
+                }
+                break;
+            case DONE:
+                switch (task.getStatus()) {
+                    case PENDING:
+                        task = task.setStatus(taskEntity.getStatus());
+                        break;
+                    default:
+                        break;
+                }
+                default:
+                    break;
+        }
+        return task;
     }
 }

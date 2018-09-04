@@ -19,9 +19,15 @@ public final class TaskEntity extends AbstractEntity<TaskEntity> {
     private final TaskStatus status;
     @Column(nullable = false)
     private final LocalDate date;
+
     @ManyToOne
     @JoinColumn(name = "User")
     private final UserEntity userEntity;
+
+    @ManyToOne
+    @JoinColumn(name = "Helper")
+    private final UserEntity taskHelper;
+
     @ManyToOne
     @JoinColumn(name = "Team", nullable = false, updatable = false)
     private final TeamEntity teamEntity;
@@ -32,6 +38,7 @@ public final class TaskEntity extends AbstractEntity<TaskEntity> {
         this.date = null;
         this.userEntity = null;
         this.teamEntity = null;
+        this.taskHelper = null;
     }
 
     public TaskEntity(UUID id, String text, TaskStatus status, LocalDate date) {
@@ -41,6 +48,7 @@ public final class TaskEntity extends AbstractEntity<TaskEntity> {
         this.date = date;
         this.userEntity = null;
         this.teamEntity = null;
+        this.taskHelper = null;
     }
 
     private TaskEntity(UUID id, boolean active, String text, TaskStatus status, LocalDate date) {
@@ -50,15 +58,17 @@ public final class TaskEntity extends AbstractEntity<TaskEntity> {
         this.status = status;
         this.userEntity = null;
         this.teamEntity = null;
+        this.taskHelper = null;
     }
 
-    private TaskEntity(UUID id, String text, TaskStatus status, LocalDate date, UserEntity userEntity, TeamEntity teamEntity) {
+    public TaskEntity(UUID id, String text, TaskStatus status, LocalDate date, UserEntity userEntity, TeamEntity teamEntity, UserEntity taskHelper) {
         super(id, true);
         this.text = text;
         this.status = status;
         this.date = date;
         this.userEntity = userEntity;
         this.teamEntity = teamEntity;
+        this.taskHelper = taskHelper;
     }
 
     public String getText() {
@@ -72,6 +82,9 @@ public final class TaskEntity extends AbstractEntity<TaskEntity> {
     public UserEntity getUserEntity() {
         return userEntity;
     }
+    public UserEntity getTaskHelper() {
+        return taskHelper;
+    }
 
     public LocalDate getDate() {
         return date;
@@ -82,15 +95,19 @@ public final class TaskEntity extends AbstractEntity<TaskEntity> {
     }
 
     public TaskEntity setUserEntity(UserEntity userEntity) {
-        return new TaskEntity(getId(), text, STARTED, date, userEntity, teamEntity);
+        return new TaskEntity(getId(), text, STARTED, date, userEntity, teamEntity, taskHelper);
+    }
+
+    public TaskEntity setHelperUserEntity(UserEntity helperUserEntity) {
+        return new TaskEntity(getId(), text, STARTED, date, userEntity, teamEntity, helperUserEntity);
     }
 
     public TaskEntity setTeamEntity(TeamEntity teamEntity) {
-        return new TaskEntity(getId(), text, status, date, userEntity, teamEntity);
+        return new TaskEntity(getId(), text, status, date, userEntity, teamEntity, taskHelper);
     }
 
     public TaskEntity dropTask() {
-        return new TaskEntity(getId(), text, UNSTARTED, LocalDate.now(), null, teamEntity);
+        return new TaskEntity(getId(), text, UNSTARTED, LocalDate.now(), null, teamEntity, taskHelper);
     }
 
     @Override
