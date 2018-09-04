@@ -32,16 +32,20 @@ public final class Logic {
 
 
     public TeamEntity checkTeamMaxCap(TeamEntity team) {
-        if (userRepository.findByTeamEntity(team).size() >= 10)
+        if (userRepository.findByTeamEntities(team).size() >= 10)
             throw new TeamCapacityReachedException("Max users in team reached!");
         return team;
     }
 
-    public UserEntity checkUserTeamAvailability(UserEntity user) {
-        if (user.getTeamEntity() != null)
-            throw new UserBelongingToTeamException("Cant add user to team! User already belongs to a team.");
+    public UserEntity checkUserTeamAvailability(UserEntity user, UUID teamId) {
+        if (user.getTeamEntities().size() == 3)
+            throw new UserBelongingToTeamException("Cant add user to team! User already belongs to three teams.");
+        if (user.getTeamEntities().stream().anyMatch(t -> t.getId().toString().equals(teamRepository.getOne(teamId).getId().toString()))) {
+            throw new UserBelongingToTeamException("User already belongs to team!");
+        }
         return user;
     }
+
 
     public User validateUsername(User user) {
         if (user.getUsername().length() < 10) {
@@ -65,8 +69,7 @@ public final class Logic {
     }
 
     public TaskEntity checkIfSameTeam(UserEntity userEntity, TaskEntity taskEntity) {
-        if (userEntity.getTeamEntity() != null &&
-                userEntity.getTeamEntity().getId().toString().equals(taskEntity.getTeamEntity().getId().toString())) {
+        if (userEntity.getTeamEntities().stream().anyMatch(t -> t.getId().toString().equals(taskEntity.getTeamEntity().getId().toString()))) {
             return taskEntity.setUserEntity(userEntity);
         }
         throw new WrongInputException("Task and User do not belong to the same Team");
