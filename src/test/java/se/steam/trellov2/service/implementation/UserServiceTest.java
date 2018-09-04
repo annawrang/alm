@@ -79,6 +79,15 @@ public class UserServiceTest extends Trellov2ApplicationTests {
 
     @Test
     public void addUserAsHelperToTask() {
+        /*
+         lägg mina två users i listan och jobba mot den istället.
+         Då kommer entiteterna däri sättas som inactive.
+         Gör samma sak för varje entitet. Dvs en lista med team, en med pair<team,task>, etc.
+         Sen instansierar jag dem i klassen, lägger till dem i @before samt i @after.
+          */
+
+
+
         // create team to use
         postedTeam = teamService.save(new Team("TestTeam"));
         // create task in team
@@ -101,6 +110,7 @@ public class UserServiceTest extends Trellov2ApplicationTests {
     @After
     public void tearDown() throws Exception {
         tempUsers.forEach(user -> userService.remove(user.getId()));
+
 
     }
 }
