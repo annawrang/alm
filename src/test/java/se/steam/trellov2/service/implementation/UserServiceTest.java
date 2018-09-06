@@ -12,21 +12,17 @@ import se.steam.trellov2.Trellov2ApplicationTests;
 import se.steam.trellov2.model.Task;
 import se.steam.trellov2.model.Team;
 import se.steam.trellov2.model.User;
-import se.steam.trellov2.model.status.TaskStatus;
 import se.steam.trellov2.repository.TaskRepository;
-import se.steam.trellov2.repository.model.TaskEntity;
 import se.steam.trellov2.service.TaskService;
 import se.steam.trellov2.service.TeamService;
 import se.steam.trellov2.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
-import static se.steam.trellov2.model.status.TaskStatus.UNSTARTED;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
@@ -94,26 +90,12 @@ public class UserServiceTest extends Trellov2ApplicationTests {
   
     @Test
     public void addUserAsHelperToTask() {
-        /*
-         lägg mina två users i listan och jobba mot den istället.
-         Då kommer entiteterna däri sättas som inactive.
-         Gör samma sak för varje entitet. Dvs en lista med team, en med pair<team,task>, etc.
-         Sen instansierar jag dem i klassen, lägger till dem i @before samt i @after.
-          */
-      
-        // create team to use
         postedTeam = teamService.save(new Team("TestTeam"));
-        // create task in team
         postedPairTeamTask = taskService.save(postedTeam.getId(), new Task("TestTask", null));
-        // create user to use
         postedUser = userService.save(new User("TestUserusername", "TestUserFirstName", "TestUserLastName"));
-        // put user in team
         teamService.addUserToTeam(postedTeam.getId(), postedUser.getId());
-        // add user to task
         userService.addTaskToUser(postedUser.getId(), postedPairTeamTask.getSecond().getId());
-        // create user to use as helper
         postedHelperUser = userService.save(new User("TestHelperusername", "TestHelperFirstName", "TestHelperLastName"));
-        // add user to task as helper
         userService.addHelperUserToTask(postedHelperUser.getId(), postedPairTeamTask.getSecond().getId());
 
         assertTrue(postedHelperUser.getId().equals(taskRepository.getTaskEntitiesById(
